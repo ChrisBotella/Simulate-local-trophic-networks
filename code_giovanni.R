@@ -166,7 +166,7 @@ return(interaction_matrix)
 }
 
 ### Creation of the matrices
-We create the adjacency matrices with different parameters. In particular, we vary the type of interactions (facilitation or competition), the percentage of interactions that we sample among all the ones that follow the criteria and the number of species. We plot the so-built adjacency matrix.
+#We create the adjacency matrices with different parameters. In particular, we vary the type of interactions (facilitation or competition), the percentage of interactions that we sample among all the ones that follow the criteria and the number of species. We plot the so-built adjacency matrix.
 
 workdir="~/Phd/Elton John/Simul/V_1/data"
 
