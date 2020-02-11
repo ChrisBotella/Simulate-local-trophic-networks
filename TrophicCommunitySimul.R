@@ -1,12 +1,4 @@
-install.packages('magrittr')
-install.packages('purrr')
-install.packages('readr')
-install.packages('matrixcalc')
-install.packages('plot.matrix')
-install.packages('devtools')
-install.packages('vegan')
-install.packages('parallelsugar')
-
+install.packages()
 
 ### Community simulation
 
@@ -22,6 +14,7 @@ library(devtools)
 library(vegan)
 #install_github('nathanvan/parallelsugar')
 library(parallelsugar)
+
 
 workdir= "C:/Users/admbotella/Documents/pCloud local/boulot/data/Simu_Networks/"
 
@@ -114,6 +107,7 @@ simulate_community <- function(
       as.data.frame(hist)
     }
   }
+  
   ans <- parallelsugar::mclapply(
     env, sim_com, niche_breadth, niche_optima, comp_inter, fac_inter,
     beta_env, beta_comp, beta_fac, beta_abun, years, K, competition,
@@ -179,8 +173,8 @@ makeTrophicInteractionMatrix=function(S,minR = 0.2){
 
 ### Simulation 
 
-Ss = c(5,10,20)
-minRs = c(.1,.3)
+Ss = c(5,10,20,30)
+minRs = c(.1,.2,.3,.4)
 
 df = expand.grid(S=Ss,minR=minRs)
 
@@ -268,7 +262,7 @@ alpha_div=function(tab){ ##tab with rows=epochs and columns=species
 for (r in 1:nruns){
   hist=sim_data[[r]]$hist  ##contains the data for each epoch rows=epochs and columns=species
   df=do.call(rbind,lapply(hist,alpha_div)) #sites x years matrix
-  pdf(file=paste0(paste(outputdir,"ConvPlots",sim_names[[r]],sep="/"),".pdf"))
+  png(file=paste0(paste(outputdir,"ConvPlots/",sim_names[[r]],sep=""),".png"),height=800,width=1400)
   boxplot.matrix(df,main=paste("Alpha diversity evolution over epochs: ",sim_names[r]),xlab="Simulation      epochs",ylab="Average alpha diversity") 
   dev.off()
 }
@@ -282,5 +276,6 @@ lapply(sim_names, function(x){
   occur=do.call(rbind,lapply(hist,function(y) y[nrow(y),]))  ###Keeping only the last community composition
   occur=as.data.frame(do.call(cbind,lapply(occur,function(y) as.integer(y>0)))) # Set to PA
   occur[,"env"]<-env
+  occur = occur[order(occur$env),,drop=F]
   write.csv2(occur,file=paste(outputdir,paste0(x,".csv"),sep="/"))
 })
